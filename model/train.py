@@ -55,12 +55,12 @@ class TrainingConfig(Config):
     # RPN_ANCHOR_RATIOS = [0.5, 1, 1.5]
     # number of training steps per epoch
 
-SETS_PATH = "/content/drive/MyDrive/TrabalhoA3"
+SETS_PATH = "./dataset"
 
 train_set = build_dataset("train", SETS_PATH)
 val_set = build_dataset("val", SETS_PATH)
 
-COCO_WEIGHTS_PATH = SETS_PATH + '/mask_rcnn_coco.h5'
+COCO_WEIGHTS_PATH = './mask_rcnn_coco.h5'
 
 config = TrainingConfig()
 
@@ -69,25 +69,23 @@ model = create_model('training', config, COCO_WEIGHTS_PATH)
 print('Model training starting.')
 
 model.train(
-    train_set, val_set, 
+    train_set, 
+    val_set, 
     learning_rate=config.LEARNING_RATE, 
     epochs=15, 
     layers='heads', 
-    augmentation=augs.SomeOf(
-        2, 
+    augmentation=augs.Sequential(
         [
             augs.Affine(rotate=(-45, 45)),
             augs.MultiplyBrightness((0.5, 1.5)),
-            augs.Add(50, per_channel=True),
             augs.Sharpen(alpha=0.5)
-        ],
-        random_order=True
+        ]
     )
 )
 
 print('Model training completed.')
 
-MODEL_WEIGHTS_PATH = SETS_PATH + f'/signal_plates_mask_rcnn_{datetime.now().strftime("%Y-%m-%dT%H-%M")}.h5'
+MODEL_WEIGHTS_PATH = f'./signal_plates_mask_rcnn_{datetime.now().strftime("%Y-%m-%dT%H-%M")}.h5'
 model.keras_model.save_weights(MODEL_WEIGHTS_PATH)
 
 print(f"Model weights saved at '{MODEL_WEIGHTS_PATH}'.")

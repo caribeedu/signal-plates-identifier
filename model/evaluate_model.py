@@ -59,11 +59,11 @@ def evaluate_model(dataset, model, cfg, list_iou_thresholds=None):
 
   return mAP, mAR, f1_score
 
-SETS_PATH = "/content/drive/MyDrive/TrabalhoA3"
+SETS_PATH = "./dataset"
 
 val_set = build_dataset("val", SETS_PATH)
 
-MODEL_WEIGHTS_PATH = SETS_PATH + '/signal_plates_mask_rcnn_.h5'
+MODEL_WEIGHTS_PATH = './signal_plates_mask_rcnn.h5'
 
 config = EvaluationConfig()
 
