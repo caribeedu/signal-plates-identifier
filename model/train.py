@@ -10,25 +10,25 @@ from imgaug import augmenters as augs
 class TrainingConfig(Config):
     NAME = "training"
 
-    LEARNING_RATE=0.002
-    LEARNING_MOMENTUM = 0.8
+    LEARNING_RATE=0.001
+    LEARNING_MOMENTUM = 0.9
     
     WEIGHT_DECAY = 0.0001
     
     DETECTION_MIN_CONFIDENCE = 0.8
 
-    STEPS_PER_EPOCH = 180
+    STEPS_PER_EPOCH = 213
     NUM_CLASSES = 1 + 51
 
-    VALIDATION_STEPS = 50
+    VALIDATION_STEPS = 25
 
     RPN_ANCHOR_SCALES = (16, 32, 64, 128, 256)
     RPN_ANCHOR_RATIOS = [0.5, 1, 1.5]
 
-    IMAGE_MIN_DIM = 512
+    IMAGE_MIN_DIM = 128
     IMAGE_MAX_DIM = 1024
 
-    TRAIN_ROIS_PER_IMAGE = 300
+    TRAIN_ROIS_PER_IMAGE = 200
 
     # ================= OLD =================
 
@@ -72,7 +72,7 @@ model.train(
     train_set, 
     val_set, 
     learning_rate=config.LEARNING_RATE, 
-    epochs=15, 
+    epochs=30, 
     layers='heads', 
     augmentation=augs.Sequential(
         [
