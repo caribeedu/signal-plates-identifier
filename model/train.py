@@ -57,7 +57,7 @@ model.train(
 
 print('Model training completed.')
 
-MODEL_WEIGHTS_PATH = f'/content/drive/MyDrive/TrabalhoA3/signal_plates_mask_rcnn_{datetime.now().strftime("%Y-%m-%dT%H-%M")}.h5'
+MODEL_WEIGHTS_PATH = f'./signal_plates_mask_rcnn_{datetime.now().strftime("%Y-%m-%dT%H-%M")}.h5'
 model.keras_model.save_weights(MODEL_WEIGHTS_PATH)
 
 print(f"Model weights saved at '{MODEL_WEIGHTS_PATH}'.")
