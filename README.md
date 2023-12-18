@@ -281,14 +281,14 @@ O modelo ainda sofre um leve _underfitting_ com alguns falsos-positivos ocorrend
 
 Abaixo algumas é demonstrado algumas detecções que o modelo `v0.0.4` foi capaz de realizar. Em cada imagem no canto esquerdo superior das marcações há a previsão juntamente da taxa de confidência.
 
-<img src="./results/1.png" alt="R-2" width="200"/>
-<img src="./results/2.png" alt="R-34" width="200"/>
-<img src="./results/3.png" alt="R-5a" width="200"/>
-<img src="./results/4.png" alt="R-6c" width="200"/>
-<img src="./results/5.png" alt="R-6a" width="200"/>
-<img src="./results/6.png" alt="R-1" width="200"/>
-<img src="./results/7.png" alt="R-19 e R-34" width="200"/>
-<img src="./results/8.png" alt="R-1" width="200"/>
+<img src="./results/1.png" alt="R-2" width="350"/>
+<img src="./results/2.png" alt="R-34" width="350"/>
+<img src="./results/3.png" alt="R-5a" width="350"/>
+<img src="./results/4.png" alt="R-6c" width="350"/>
+<img src="./results/5.png" alt="R-6a" width="350"/>
+<img src="./results/6.png" alt="R-1" width="350"/>
+<img src="./results/7.png" alt="R-19 e R-34" width="350"/>
+<img src="./results/8.png" alt="R-1" width="350"/>
 
 ### 5. Versões
 Você pode baixar e utilizar todas as versões descritas acima acessando [este link](https://github.com/caribeedu/signal-plates-identifier/tags).
