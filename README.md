@@ -277,8 +277,9 @@ E mais uma vez, decidimos aumentar a de épocas do treinamento, indo de 50 à 10
 ##### Conclusões
 O modelo ainda sofre um leve _underfitting_ com alguns falsos-positivos ocorrendo eventualmente. Apesar disso, o resultado foi satisfatório pois ele foi capaz de realizar detecções com maior taxa de certeza e também identificar placas fora no contexto normal, como por exemplo, caídas no chão.
 
-### 4. Exemplos
+### 4. Resultados
 
+#### 4.1. Exemplos
 Abaixo algumas é demonstrado algumas detecções que o modelo `v0.0.4` foi capaz de realizar. Em cada imagem no canto esquerdo superior das marcações há a previsão juntamente da taxa de confidência.
 
 <img src="./results/1.png" alt="R-2" width="350"/>
@@ -289,6 +290,9 @@ Abaixo algumas é demonstrado algumas detecções que o modelo `v0.0.4` foi capa
 <img src="./results/6.png" alt="R-1" width="350"/>
 <img src="./results/7.png" alt="R-19 e R-34" width="350"/>
 <img src="./results/8.png" alt="R-1" width="350"/>
+
+#### 4.2. Previsões aleatórias
+Também é possível realizar previsões aleatórias em imagens do _dataset_ de validação, para isso basta utilizar o _notebook_ [`/model/random_predict.ipynb`](https://github.com/caribeedu/signal-plates-identifier/blob/main/model/random_predict.ipynb).
 
 ### 5. Versões
 Você pode baixar e utilizar todas as versões descritas acima acessando [este link](https://github.com/caribeedu/signal-plates-identifier/tags).
