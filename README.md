@@ -92,7 +92,7 @@ Observação: É importante destacar que; para as placas que continham apenas um
 ### 1. Decisão de Tecnologias
 Primeiramente precisávamos escolher o tipo/arquitetura de rede neural a ser utilizada. Decidimos seguir com a arquitura R-CNN (que utiliza a arquitetura ResNet no _back-bone_) pois a habilidade de se extrair áreas de interesse baseadas em regiões é muito apropriada para o tipo de problema que queremos resolver, no caso, segmentação de instâncias de objeto.
 
-O próximo passo seria escolher entre implementar do zero uma rede neural seguindo a arquitetura de R-CNN ou utilizar uma implementação já existente. Neste momento encontramos o artigo [Mask R-CNN](https://arxiv.org/abs/1703.06870), que descreve um framework para segmentação de instâncias de objetos. A partir dele, foi criado um projeto _open-source_ de mesmo nme que implementa a ideia descrita no artigo, o [Mask R-CNN](https://github.com/matterport/Mask_RCNN) do [matterport](https://github.com/matterport).
+O próximo passo seria escolher entre implementar do zero uma rede neural seguindo a arquitetura de R-CNN ou utilizar uma implementação já existente. Neste momento encontramos o artigo [Mask R-CNN](https://arxiv.org/abs/1703.06870), que descreve um framework para segmentação de instâncias de objetos. A partir dele, foi criado um projeto _open-source_ de mesmo nome que implementa a ideia descrita no artigo, o [Mask R-CNN](https://github.com/matterport/Mask_RCNN) do [matterport](https://github.com/matterport).
 
 ### 2. Desenvolvimento do Modelo
 
@@ -106,7 +106,7 @@ Para resolver isso buscamos versões alternativas desenvolvidas pela própria co
 ##### 2.2.1 Requisitos
 Para executar o treinamento é necessário ter instalado em sua máquina as seguintes bibliotecas:
 
-- CUDA Toolkit `v11.0.2`
+- CUDA Toolkit `v11.0.2` (necessário para o Tensorflow `v2.5.0`)
 - Tensorflow `v2.5.0`
 - Keras `v2.5.0rc0`
 
@@ -118,7 +118,7 @@ Por uma questão de desempenho do treinamento decidimos utilizar o [Google Colab
 Caso tenha interesse, você pode executar o mesmo treinamento realizado durante este projeto, basta baixar o _notebook_ e importá-lo no Google Colab.
 
 ##### 2.2.3 Aprendizado por transferência
-Na busca de tentar melhorar a precisão do nosso modelo, buscamos realizar a técnica de _transfer learning_, onde com ela poderíamos obter um conhecimento prévio de outro modelo pré-treinado e assim, extrair as _features_ desejadas com mais facilidade em nosso modelo. Para a realização desta técnica, utilizamos o modelo pré-treinado do [COCO](https://github.com/matterport/Mask_RCNN/releases/tag/v2.0).
+Na busca de tentar melhorar a precisão do nosso modelo, buscamos realizar a técnica de _transfer learning_, onde com ela poderíamos obter um conhecimento prévio de outro modelo pré-treinado e assim, ter mais facilidade ao extrair as _features_ desejadas com nosso modelo. Para a realização desta técnica, utilizamos o modelo pré-treinado do [COCO](https://github.com/matterport/Mask_RCNN/releases/tag/v2.0).
 
 ##### 2.2.4 Execução
 O _notebook_ por ser _self-contained_ já realiza; o download do _dataset_, configuração do ambiente e a instalação de dependências. Você também pode executá-lo no Jupyter, basta ignorar a seção de configuração do ambiente Colab (atenção aos requisitos citados acima).
@@ -126,7 +126,7 @@ O _notebook_ por ser _self-contained_ já realiza; o download do _dataset_, conf
 ### 3. Avaliação do Modelo
 
 #### 3.1. Primeiro modelo
-No nosso primeiro modelo obtivemos resultados bem insatifatórios, o que já era esperado, já que temos um _dataset_ desbalanceado além de termos usamos uma quantidade pequena de épocas (15) com apenas 150 passos. Além disso neste primeiro modelo havíamos treinado apenas as camadas superiores da rede neural, deixando as camadas de _back-bone_ intactas.
+No nosso primeiro modelo obtivemos resultados bem insatifatórios, o que já era esperado, já que temos um _dataset_ desbalanceado além de termos usamos uma quantidade pequena de épocas (15) com apenas 160 passos. Além disso neste primeiro modelo havíamos treinado apenas as camadas superiores da rede neural, deixando as camadas de _back-bone_ intactas.
 
 ##### Hiperparâmetros
 
@@ -135,7 +135,7 @@ No nosso primeiro modelo obtivemos resultados bem insatifatórios, o que já era
 |NUM_CLASSES|Definir número de classes|52 (51 placas + plano de fundo)|
 |STEPS_PER_EPOCH|Tamanho do _batch_ de treinamento por época|160|
 |LEARNING_RATE|Determina o tamanho de cada passo durante a otimização|0.002|
-|LEARNING_MOMENTUM|Acumulador de média dos pesos, usado para celaração do treinamento|0.8|
+|LEARNING_MOMENTUM|Acumulador de média dos pesos, usado para acelaração do treinamento|0.8|
 |WEIGHT_DECAY|Valor utilizado na função de _loss_ para previnir o aumento exagerado dos pesos|0.0001|
 |IMAGE_MIN_DIM|Dimensão mínima da imagem (caso não atenda é redimensionada)|512|
 |VALIDATION_STEPS|Determina a quantidade de passos de validação em cada época|50|
@@ -157,11 +157,12 @@ Dado o baixo desempenho apresentado nesta primeira versão, entendemos duas nece
 - Trabalhar melhor os hiperparâmetros
 
 #### 3.2. Segundo modelo
-No segundo modelo decidimos realizar duas tentativas em conjunto:
+No segundo modelo decidimos realizar cinco tentativas em conjunto:
 - Aumentar a quantidade de regiões de interesse (`TRAIN_ROIS_PER_IMAGE`) na expectativa de que a taxa de dectecção fosse maior
 - Treinar também as camadas de _back-bone_
 - Diminuir a taxa de aprendizado (`LEARNING_RATE`) e aumentar o _momentum_ (`LEARNING_MOMENTUM`) na busca de um melhor balanceio
 - Diminuir a quantidade de passos de validação (`VALIDATION_STEPS`)
+- Diminuir o tamanho do _batch_ (`STEPS_PER_EPOCH`), buscando um tempo de treinamento menor
 
 Além disso, mantivemos a mesma quantidade de épocas do treinamento anterior (15).
 
@@ -170,9 +171,9 @@ Além disso, mantivemos a mesma quantidade de épocas do treinamento anterior (1
 | Nome | Função | Valor |
 |------|--------|-------|
 |NUM_CLASSES|Definir número de classes|52 (51 placas + plano de fundo)|
-|STEPS_PER_EPOCH|Tamanho do _batch_ de treinamento por época|160|
+|STEPS_PER_EPOCH|Tamanho do _batch_ de treinamento por época|100|
 |LEARNING_RATE|Determina o tamanho de cada passo durante a otimização|0.001|
-|LEARNING_MOMENTUM|Acumulador de média dos pesos, usado para celaração do treinamento|0.9|
+|LEARNING_MOMENTUM|Acumulador de média dos pesos, usado para acelaração do treinamento|0.9|
 |WEIGHT_DECAY|Valor utilizado na função de _loss_ para previnir o aumento exagerado dos pesos|0.0001|
 |IMAGE_MIN_DIM|Dimensão mínima da imagem (caso não atenda é redimensionada)|512|
 |VALIDATION_STEPS|Determina a quantidade de passos de validação em cada época|25|
@@ -191,7 +192,7 @@ Além disso, mantivemos a mesma quantidade de épocas do treinamento anterior (1
 ##### Conclusões
 Apesar das métricas terem aumentado ligeiramente, nosso modelo ainda sofria de um forte _underfitting_, onde diversas vezes identificava objetos vermelhos e árvores como regiões de interesse. Este engano durante a detecção foi causado pelo aumento exagerado da quantidade de regiões de interesse somado a diminuição da quantidade de passos de validação.
 
-Ainda com baixo desempenho, entendemos que as necessidades anteriores eram verdadeiras e decidimos as colocar em prática:
+Ainda com baixo desempenho, entendemos que as necessidades anteriores eram verdadeiras (decidimos entretanto neste momento focar apenas em uma delas):
 - Aplicar _data augmentation_ para expandir nosso _dataset_ com diferentes imagens
 - **Entender** e trabalhar melhor os hiperparâmetros
 
@@ -201,7 +202,7 @@ No terceiro modelo investimos mais no entendimento dos hiperparâmetros e buscam
 - Trabalhar apenas as camadas de alto nível deixando o treinamento de _back-bone_ para momento posterior onde o _fine-tuning_ fosse adequado
 - Aumentar levemente a taxa de aprendizado (`LEARNING_RATE`) e diminuir o _momentum_ (`LEARNING_MOMENTUM`), ainda na busca de um melhor balanceio
 - Aumentar a quantidade de passos de validação (`VALIDATION_STEPS`) novamente, já que a diminuição no treinamento anterior havia afetado muito pouco o tempo de treinamento
-- Aumentar ao tamanho do _batch_ (`STEPS_PER_EPOCH`), pra que ficasse conforme ao tamanho do _dataset_ de treinamento
+- Aumentar o tamanho do _batch_ (`STEPS_PER_EPOCH`), pra que ficasse conforme ao tamanho do _dataset_ de treinamento
 - Diminuir a dimensão mínima das imagens (`IMAGE_MIN_DIM`) de 512 para 256, buscando mais performance no treinamento
 - Aumentar a escala dos objetos de foco (`RPN_ANCHOR_RATIOS`) de (mín.: 16, máx.: 128) para (mín.: 16, máx.: 256), tentando adaptar melhor à imagens de alta resolução onde as placas tivessem em grande escala
 
@@ -214,7 +215,7 @@ Além disso, decidimos aumentar a de épocas do treinamento, indo de 15 à 50.
 |NUM_CLASSES|Definir número de classes|52 (51 placas + plano de fundo)|
 |STEPS_PER_EPOCH|Tamanho do _batch_ de treinamento por época|259|
 |LEARNING_RATE|Determina o tamanho de cada passo durante a otimização|0.002|
-|LEARNING_MOMENTUM|Acumulador de média dos pesos, usado para celaração do treinamento|0.85|
+|LEARNING_MOMENTUM|Acumulador de média dos pesos, usado para acelaração do treinamento|0.85|
 |WEIGHT_DECAY|Valor utilizado na função de _loss_ para previnir o aumento exagerado dos pesos|0.0001|
 |IMAGE_MIN_DIM|Dimensão mínima da imagem (caso não atenda é redimensionada)|256|
 |VALIDATION_STEPS|Determina a quantidade de passos de validação em cada época|75|
@@ -231,7 +232,7 @@ Além disso, decidimos aumentar a de épocas do treinamento, indo de 15 à 50.
 |F1 Score|0.069|
 
 ##### Conclusões
-Novamente as métricas tiveram um pequeno avanço mas nosso modelo seguia com _underfitting_, repetindo o cenário de engano com árvores e objetos muito vermelhos. Apesar disso, ele já era capaz de identificar corretamente e com mais facilidade as placas, com uma boa confiança (>~80%) quando o fazia.
+Novamente as métricas tiveram um avanço mas nosso modelo seguia com _underfitting_, repetindo o cenário de engano com árvores e objetos muito vermelhos. Apesar disso, ele já era capaz de identificar corretamente e com mais facilidade as placas, com uma boa confiança (>~80%) quando o fazia.
 
 Finalmente nos restaram as últimas opções:
 - Fazer finalmente o _data augmentation_ para expandir nosso _dataset_ com diferentes imagens (conforme deveríamos ter feito desde o início)
@@ -257,7 +258,7 @@ E mais uma vez, decidimos aumentar a de épocas do treinamento, indo de 50 à 10
 |NUM_CLASSES|Definir número de classes|52 (51 placas + plano de fundo)|
 |STEPS_PER_EPOCH|Tamanho do _batch_ de treinamento por época|259|
 |LEARNING_RATE|Determina o tamanho de cada passo durante a otimização|0.0015|
-|LEARNING_MOMENTUM|Acumulador de média dos pesos, usado para celaração do treinamento|0.85|
+|LEARNING_MOMENTUM|Acumulador de média dos pesos, usado para acelaração do treinamento|0.85|
 |WEIGHT_DECAY|Valor utilizado na função de _loss_ para previnir o aumento exagerado dos pesos|0.0001|
 |IMAGE_MIN_DIM|Dimensão mínima da imagem (caso não atenda é redimensionada)|512|
 |VALIDATION_STEPS|Determina a quantidade de passos de validação em cada época|50|
@@ -299,9 +300,6 @@ Você pode baixar e utilizar todas as versões descritas acima acessando [este l
 
 ### 6. Comparativo com o YOLOv8
 Infelizmente, até o presente momento não tivemos tempo hábil para realizar um comparativo do nosso modelo com um modelo YOLOv8.
-
-## Conclusões
-Este trabalho foi bem desafiador, desde a etapa de obtenção do _dataset_, que foi bem exaustivo até a parte de treinamento, que exigiu bom tempo de investimento para se chegar num resultado minimamente viável. A experiência trabalhando com redes neurais de arquitura complexa foi interessante e nos permitiu entender melhor do funcionamento das CNNs.
 
 ## Integrantes
 Edu Caribé - [@caribeedu](https://github.com/caribeedu)
