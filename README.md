@@ -298,9 +298,6 @@ Também é possível realizar previsões aleatórias em imagens do _dataset_ de 
 ### 5. Versões
 Você pode baixar e utilizar todas as versões descritas acima acessando [este link](https://github.com/caribeedu/signal-plates-identifier/tags).
 
-### 6. Comparativo com o YOLOv8
-Infelizmente, até o presente momento não tivemos tempo hábil para realizar um comparativo do nosso modelo com um modelo YOLOv8.
-
 ## Integrantes
 Edu Caribé - [@caribeedu](https://github.com/caribeedu)
 <br>
